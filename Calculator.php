@@ -17,7 +17,10 @@ class Calculator {
     );
 
     public function evaluate($input) {
-
+        self::$input = (string)$input;
+        $expression = self::parseInput(self::$input);
+        $postfix = self::convertToPostFix($expression);
+        return self::evaluatePostFix($postfix);
     }
 
     public function getInput() {
@@ -34,7 +37,8 @@ class Calculator {
     }
 
     private static function parseInput($input) {
-        $regex = '/'.preg_quote(self::$operators, '/').'/';
+        $operators = implode('', array_keys(self::$operators));
+        $regex = '/'. preg_quote($operators, '/') .'/';
         $input = preg_replace($regex, " $0 ", $input);
         $input = trim(preg_replace('/\s+/', ' ', $input));
         return $input;
