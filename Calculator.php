@@ -64,8 +64,40 @@ class Calculator {
         return $postfix_list;
     }
 
-    private static function evaluatePostFix($input) {
+    private static function evaluatePostFix($expression) {
+        $stack = array();
+        foreach($expression as $element) {
+            if(array_key_exists($element, self::$operators)) {
+                $second = array_pop($stack);
+                $first = array_pop($stack);
+                $value = call_user_func(array(self, self::$operators[$element]), $first, $second);
+                array_push($stack, $value);
+            } else {
+                array_push($stack, intval($element));
+            }
+        }
 
+        return array_pop($stack);
+    }
+
+    private static function add($a, $b) {
+        return $a + $b;
+    }
+
+    private static function subtract($a, $b) {
+        return $a - $b;
+    }
+
+    private static function divide($a, $b) {
+        return $a / $b;
+    }
+
+    private static function multiply($a, $b) {
+        return $a * $b;
+    }
+
+    private static function modulo($a, $b) {
+        return $a % $b;
     }
 }
 
