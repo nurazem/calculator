@@ -16,14 +16,6 @@ class Calculator {
         '%' => 2
     );
 
-    public function evaluate($input) {
-        self::$input = (string)$input;
-        self::validateInput();
-        $expression = self::parseInput(self::$input);
-        $postfix = self::convertToPostFix($expression);
-        return self::evaluatePostFix($postfix);
-    }
-
     public function getInput() {
         return self::$input;
     }
@@ -33,24 +25,35 @@ class Calculator {
         return true;
     }
 
-    private static function validateInput() {
-        if (!self::$input) {
+    public function evaluate($input) {
+        self::$input = (string)$input;
+        $expression = self::parseInput(self::$input);
+        self::validateInput($expression);
+        $postfix = self::convertToPostFix($expression);
+        return self::evaluatePostFix($postfix);
+    }
+
+    private static function validateInput($input) {
+        if (!$input) {
             throw new Exception('Input is empty');
         }
 
-        $expression = explode(' ', self::$input);
-        if (!is_numeric($expression[0]) || !is_numeric(end($expression))) {
-            throw new Exception('First and last elements of expression have to be numeric');
-        }
+        // $expression = explode(' ', $input);
+        // if (!is_numeric($expression[0]) || !is_numeric(end($expression))) {
+        //     throw new Exception('First and last elements of expression have to be numeric');
+        // }
 
-        foreach ($expression as $element) {
-            if(!is_numeric($element) || !array_key_exists($element, self::$operators)) {
-                throw new Exception('Invalid expression');
-            }
-        }
-
+        // foreach ($expression as $element) {
+        //     if(!is_numeric($element) || !array_key_exists($element, self::$operators)) {
+        //         throw new Exception('Invalid expression');
+        //     }
+        // }
     }
 
+    /*
+    * Parse input string to add spaces between numbers and operators
+    * and remove any unnecessary spaces
+    */
     private static function parseInput($input) {
         $operators = implode('', array_keys(self::$operators));
         $regex = '/'. preg_quote($operators, '/') .'/';
@@ -59,6 +62,9 @@ class Calculator {
         return $input;
     }
 
+    /*
+    * Convert infix to postfix expresssion for trivial computation by using a stack
+    */
     private static function convertToPostFix($input) {
         $op_stack = array();
         $postfix_list = array();
@@ -83,6 +89,9 @@ class Calculator {
         return $postfix_list;
     }
 
+    /*
+    * Evaluate postfix expresssion by using a stack
+    */
     private static function evaluatePostFix($expression) {
         $stack = array();
         foreach($expression as $element) {
@@ -99,6 +108,9 @@ class Calculator {
         return array_pop($stack);
     }
 
+    /*
+    * Math functions corresponding to values of the $operators
+    */
     private static function add($a, $b) {
         return $a + $b;
     }
