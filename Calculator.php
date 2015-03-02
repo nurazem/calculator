@@ -16,6 +16,15 @@ class Calculator {
         '%' => 2,
     );
 
+    public function getInput() {
+        return self::$input;
+    }
+
+    public function setInput($input) {
+        self::$input = (string)$input;
+        return true;
+    }
+
     public function evaluate($input) {
 
     }
