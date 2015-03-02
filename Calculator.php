@@ -13,11 +13,12 @@ class Calculator {
         '-' => 1,
         '*' => 2,
         '/' => 2,
-        '%' => 2,
+        '%' => 2
     );
 
     public function evaluate($input) {
         self::$input = (string)$input;
+        self::validateInput();
         $expression = self::parseInput(self::$input);
         $postfix = self::convertToPostFix($expression);
         return self::evaluatePostFix($postfix);
@@ -32,7 +33,21 @@ class Calculator {
         return true;
     }
 
-    private static function validateInput($input) {
+    private static function validateInput() {
+        if (!self::$input) {
+            throw new Exception('Input is empty');
+        }
+
+        $expression = explode(' ', self::$input);
+        if (!is_numeric($expression[0]) || !is_numeric(end($expression))) {
+            throw new Exception('First and last elements of expression have to be numeric');
+        }
+
+        foreach ($expression as $element) {
+            if(!is_numeric($element) || !array_key_exists($element, self::$operators)) {
+                throw new Exception('Invalid expression');
+            }
+        }
 
     }
 
