@@ -34,7 +34,10 @@ class Calculator {
     }
 
     private static function parseInput($input) {
-
+        $regex = '/'.preg_quote($operators, '/').'/';
+        $input = preg_replace($regex, " $0 ", $input);
+        $input = trim(preg_replace('/\s+/', ' ', $input));
+        return $input;
     }
 
     private static function convertToPostFix($input) {
